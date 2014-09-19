@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import ie.appz.sharkshare.adapters.SongAdapter;
 import ie.appz.sharkshare.models.SongDetail;
 import ie.appz.sharkshare.service.SharkFinderService;
 

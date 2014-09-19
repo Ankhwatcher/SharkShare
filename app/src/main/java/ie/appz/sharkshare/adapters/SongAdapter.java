@@ -1,4 +1,4 @@
-package ie.appz.sharkshare;
+package ie.appz.sharkshare.adapters;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import java.util.Random;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ie.appz.sharkshare.R;
 import ie.appz.sharkshare.models.SongDetail;
 
 /**

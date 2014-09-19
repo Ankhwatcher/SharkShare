@@ -24,8 +24,8 @@ import butterknife.InjectView;
 import butterknife.OnItemClick;
 import ie.appz.sharkshare.Constants;
 import ie.appz.sharkshare.R;
-import ie.appz.sharkshare.SongAdapter;
 import ie.appz.sharkshare.TinySharkApi;
+import ie.appz.sharkshare.adapters.SongAdapter;
 import ie.appz.sharkshare.models.SongDetail;
 
 public class SharkFinderService extends Service {
