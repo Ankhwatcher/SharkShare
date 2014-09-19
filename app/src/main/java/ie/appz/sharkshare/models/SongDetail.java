@@ -1,11 +1,14 @@
 package ie.appz.sharkshare.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by rory on 16/09/14.
  */
-public class SongDetail {
+public class SongDetail implements Parcelable {
 
     @SerializedName("Url")
     private String url;
@@ -76,5 +79,22 @@ public class SongDetail {
 
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(url);
+        dest.writeLong(songId);
+        dest.writeString(songName);
+        dest.writeLong(artistId);
+        dest.writeString(artistName);
+        dest.writeLong(albumId);
+        dest.writeString(albumName);
     }
 }

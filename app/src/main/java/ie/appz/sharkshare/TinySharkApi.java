@@ -14,7 +14,6 @@ import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import ie.appz.sharkshare.models.SongDetail;
 import ie.appz.sharkshare.request.GsonRequest;
@@ -75,11 +74,11 @@ public final class TinySharkApi {
         return sRequestQueue;
     }
 
-    public void performSearch(Context context, String searchText, Response.Listener<List<SongDetail>> responseListener, Response.ErrorListener errorListener) {
+    public void performSearch(Context context, String searchText, Response.Listener<ArrayList<SongDetail>> responseListener, Response.ErrorListener errorListener) {
         performSearch(context, searchText, Constants.SONG_LIMIT, ApiKeys.API_KEY_TINYSONG, responseListener, errorListener);
     }
 
-    public void performSearch(Context context, String searchText, int limit, String apiKey, Response.Listener<List<SongDetail>> responseListener, Response.ErrorListener errorListener) {
+    public void performSearch(Context context, String searchText, int limit, String apiKey, Response.Listener<ArrayList<SongDetail>> responseListener, Response.ErrorListener errorListener) {
 
         String concatSearch = String.format(LIMITED_DETAILED_SEARCH, searchText, limit, apiKey);
         URL url;
@@ -93,7 +92,7 @@ public final class TinySharkApi {
 
         }.getType();
 
-        GsonRequest<List<SongDetail>> request = new GsonRequest<List<SongDetail>>(GsonRequest.Method.GET, url.toString(), songDetailListType, responseListener, errorListener);
+        GsonRequest<ArrayList<SongDetail>> request = new GsonRequest<ArrayList<SongDetail>>(GsonRequest.Method.GET, url.toString(), songDetailListType, responseListener, errorListener);
         requestQueueSingleton(context).add(request);
 
     }

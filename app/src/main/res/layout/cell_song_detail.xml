@@ -7,6 +7,19 @@
     android:background="@android:color/black"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/ivAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:src="@drawable/album_circle" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/album_hole" />
+
     <TextView
         android:id="@+id/tvArtist"
         android:layout_width="match_parent"

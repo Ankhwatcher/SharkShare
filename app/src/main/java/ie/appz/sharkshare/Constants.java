@@ -6,4 +6,5 @@ package ie.appz.sharkshare;
 public interface Constants {
     public static final String LOGTAG = "ie.appz.SharkShare";
     public static final int SONG_LIMIT = 32;
+    public static final String SEARCH_RESULTS = "search results";
 }

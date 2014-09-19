@@ -1,86 +1,40 @@
 package ie.appz.sharkshare;
 
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnItemClick;
 import ie.appz.sharkshare.models.SongDetail;
+import ie.appz.sharkshare.service.SharkFinderService;
 
 
 public class SharkFinderActivity extends Activity {
 
-    @InjectView(R.id.gvSongs)
-    protected GridView gvSongs;
 
     private List<SongDetail> songDetailList = new ArrayList<SongDetail>();
     private SongAdapter songAdapter = new SongAdapter();
     private ClipboardManager clipboard;
+    private WindowManager windowManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shark_finder);
-        ButterKnife.inject(this);
 
-        clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        Intent intent = new Intent(this, SharkFinderService.class);
+        intent.putExtras(getIntent().getExtras());
 
-        gvSongs.setAdapter(songAdapter);
-
-
-        if (getIntent().getAction().equals(Intent.ACTION_SEND) && getIntent().hasExtra(Intent.EXTRA_SUBJECT)) {
-            String searchText = getIntent().getStringExtra(Intent.EXTRA_SUBJECT);
-
-            //Remove the "Check out " message from the start of Google Music links
-            if (searchText.startsWith("Check out ")) {
-                searchText = searchText.replace("Check out ", "");
-            }
-
-            Log.d(Constants.LOGTAG, "Searching for " + searchText);
-            TinySharkApi.getInstance(this).performSearch(this, searchText, new Response.Listener<List<SongDetail>>() {
-                @Override
-                public void onResponse(List<SongDetail> response) {
-                    songDetailList.clear();
-                    songDetailList.addAll(response);
-                    songAdapter.notifyDataSetChanged();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.fillInStackTrace();
-                }
-            });
-        }
-
+        startService(intent);
+        finish();
 
     }
 
-    @OnItemClick(R.id.gvSongs)
-    void songClicked(int position) {
-        String url = songAdapter.getItem(position).getUrl();
-        ClipData clipData = ClipData.newPlainText("tinysong link", url);
-        clipboard.setPrimaryClip(clipData);
-        Toast.makeText(this, url + " added to the clipboard", Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,55 +58,5 @@ public class SharkFinderActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    static class SongDetailHolder {
-        @InjectView(R.id.tvArtist)
-        TextView tvArtist;
 
-        @InjectView(R.id.tvSong)
-        TextView tvSong;
-
-        @InjectView(R.id.tvAlbum)
-        TextView tvAlbum;
-    }
-
-    public class SongAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return songDetailList.size();
-        }
-
-        @Override
-        public SongDetail getItem(int position) {
-            return songDetailList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getItem(position).getSongId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            SongDetail songDetail = getItem(position);
-            SongDetailHolder holder;
-
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.cell_song_detail, parent, false);
-                holder = new SongDetailHolder();
-                ButterKnife.inject(holder, convertView);
-                if (convertView != null)
-                    convertView.setTag(R.id.tag_cell_holder, holder);
-            } else {
-                holder = (SongDetailHolder) convertView.getTag(R.id.tag_cell_holder);
-            }
-
-            holder.tvArtist.setText(songDetail.getArtistName());
-            holder.tvSong.setText(songDetail.getSongName());
-            holder.tvAlbum.setText(songDetail.getAlbumName());
-
-            return convertView;
-        }
-
-    }
 }

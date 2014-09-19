@@ -1,13 +1,14 @@
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gvSongs"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:layout_margin="64dp"
     android:columnWidth="160dp"
     android:gravity="center"
     android:horizontalSpacing="8dp"
     android:numColumns="2"
-    android:stretchMode="spacingWidth"
+    android:stretchMode="none"
     android:verticalSpacing="8dp"
     tools:context=".SharkFinderActivity" />
 
