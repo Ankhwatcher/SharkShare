@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
     android:layout_height="160dp"
+    android:layout_gravity="center"
     android:background="@android:color/black"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="2dp">
 
-    <ImageView
+<ImageView
         android:id="@+id/ivAlbum"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,15 +1,49 @@
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/gvSongs"
-    android:layout_width="wrap_content"
+    android:id="@+id/flDialog"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="64dp"
-    android:columnWidth="160dp"
-    android:gravity="center"
-    android:horizontalSpacing="8dp"
-    android:numColumns="2"
-    android:stretchMode="none"
-    android:verticalSpacing="8dp"
-    tools:context=".SharkFinderActivity" />
+    android:layout_margin="16dp">
 
+    <LinearLayout
+        android:id="@+id/llSearching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvSearching"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            tools:text="Searching for\nDo You Want To by Franz Ferdinand" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/gvSongs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_background"
+        android:clipToPadding="false"
+        android:columnWidth="160dp"
+        android:gravity="center"
+        android:horizontalSpacing="4dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="4dp"
+        android:visibility="gone"
+        tools:context=".SharkFinderActivity"
+        tools:listitem="@layout/cell_song_detail"
+        tools:visibility="visible" />
+</FrameLayout>
 

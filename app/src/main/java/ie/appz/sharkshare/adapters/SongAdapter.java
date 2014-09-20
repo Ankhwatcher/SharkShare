@@ -40,11 +40,14 @@ public class SongAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+
         SongDetail songDetail = getItem(position);
         SongDetailHolder holder;
 
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_song_detail, parent, false);
+
             holder = new SongDetailHolder();
             ButterKnife.inject(holder, convertView);
             if (convertView != null)
