@@ -1,6 +1,5 @@
 package ie.appz.sharkshare.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.appz.sharkshare.R;
 import ie.appz.sharkshare.models.SongDetail;
+import ie.appz.sharkshare.utils.ColorUtils;
 
 /**
  * Created by rory on 18/09/14.
  */
 public class SongAdapter extends BaseAdapter {
     private ArrayList<SongDetail> list = new ArrayList<SongDetail>();
-    private Random random = new Random();
 
     @Override
     public int getCount() {
@@ -60,16 +58,7 @@ public class SongAdapter extends BaseAdapter {
         holder.tvSong.setText(songDetail.getSongName());
         holder.tvAlbum.setText(songDetail.getAlbumName());
 
-        float[] hsv = new float[3];
-
-        int color = generateRandomColour();
-        Color.colorToHSV(color, hsv);
-
-        hsv[2] *= 0.5;
-        color = Color.HSVToColor(hsv);
-
-        holder.ivAlbum.setColorFilter(color);
-
+        holder.ivAlbum.setColorFilter(ColorUtils.generateRandomColour(songDetail.getSongId()));
 
         return convertView;
     }
@@ -82,10 +71,6 @@ public class SongAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public final int generateRandomColour() {
-
-        return Color.argb(random.nextInt(), random.nextInt(), random.nextInt(), random.nextInt());
-    }
 
     static class SongDetailHolder {
         @InjectView(R.id.tvArtist)

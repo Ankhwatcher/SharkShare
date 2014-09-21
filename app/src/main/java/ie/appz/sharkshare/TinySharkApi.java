@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
@@ -93,6 +94,9 @@ public final class TinySharkApi {
         }.getType();
 
         GsonRequest<ArrayList<SongDetail>> request = new GsonRequest<ArrayList<SongDetail>>(GsonRequest.Method.GET, url.toString(), songDetailListType, responseListener, errorListener);
+
+
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 3, 1.5f));
         requestQueueSingleton(context).add(request);
 
     }

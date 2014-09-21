@@ -1,17 +1,18 @@
 package ie.appz.sharkshare;
 
+import android.animation.Animator;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,6 +31,51 @@ import ie.appz.sharkshare.service.SharkFinderService;
 public class SharkFinderActivity extends Activity {
 
 
+    private final Object object = new Object();
+    private Thread failureTimeout = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                synchronized (object) {
+                    object.wait(3000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (!isDestroyed() && !isFinishing()) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        llSearching.animate()
+                                .alpha(0f)
+                                .setDuration(getResources().getInteger(android.R.integer.config_longAnimTime))
+                                .setListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                    }
+                });
+            }
+        }
+    });
+
     @InjectView(R.id.flDialog)
     protected FrameLayout flDialog;
 
@@ -42,7 +88,8 @@ public class SharkFinderActivity extends Activity {
     @InjectView(R.id.tvSearching)
     protected TextView tvSearching;
 
-
+    @InjectView(R.id.pbSearching)
+    protected ProgressBar pbSearching;
     private SongAdapter songAdapter = new SongAdapter();
 
     @OnClick(R.id.flDialog)
@@ -52,18 +99,13 @@ public class SharkFinderActivity extends Activity {
 
     @OnItemClick(R.id.gvSongs)
     void songClicked(int position) {
-        String url = songAdapter.getItem(position).getUrl();
-        ClipData clipData = ClipData.newPlainText("tinysong link", url);
-        ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(clipData);
-
-        Toast.makeText(this, url + " added to the clipboard", Toast.LENGTH_LONG).show();
-
+        SongDetail songDetail = songAdapter.getItem(position);
         Intent intent = new Intent(this, SharkFinderService.class);
-        getIntent().putExtras(getIntent().getExtras());
+        intent.putExtra(Constants.SONG_URL, songDetail.getUrl());
+        intent.putExtra(Constants.SONG_ID, songDetail.getSongId());
 
-        //startService(intent);
+        startService(intent);
         finish();
-
     }
 
     @Override
@@ -83,7 +125,11 @@ public class SharkFinderActivity extends Activity {
             if (searchText.startsWith("Check out ")) {
                 searchText = searchText.replace("Check out ", "");
             }
+            Drawable searchingBackground = getResources().getDrawable(R.drawable.toast_background);
+            searchingBackground.setColorFilter(getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_ATOP);
+            llSearching.setBackground(searchingBackground);
             llSearching.setVisibility(View.VISIBLE);
+
             tvSearching.setText(getString(R.string.searching_for_x, searchText));
 
 
@@ -91,21 +137,29 @@ public class SharkFinderActivity extends Activity {
             TinySharkApi.getInstance(this).performSearch(this, searchText, new Response.Listener<ArrayList<SongDetail>>() {
                 @Override
                 public void onResponse(final ArrayList<SongDetail> response) {
-                    llSearching.setVisibility(View.GONE);
-                    gvSongs.setVisibility(View.VISIBLE);
-                    songAdapter.setList(response);
-                    songAdapter.notifyDataSetChanged();
+                    if (response.size() == 0) {
+                        tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, finalSearchText));
+                        pbSearching.setVisibility(View.GONE);
+                        failureTimeout.start();
+                    } else {
+                        llSearching.setVisibility(View.GONE);
+                        gvSongs.setVisibility(View.VISIBLE);
+                        songAdapter.setList(response);
+                        songAdapter.notifyDataSetChanged();
 
-                    if (response.size() == 1) {
-                        int cellSize = getResources().getDimensionPixelSize(R.dimen.cell_size);
-                        gvSongs.setLayoutParams(new FrameLayout.LayoutParams(cellSize, cellSize, Gravity.CENTER));
+                        if (response.size() == 1) {
+                            int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
+                            int cellHeight = getResources().getDimensionPixelSize(R.dimen.cell_height);
+                            gvSongs.setLayoutParams(new FrameLayout.LayoutParams(cellWidth, cellHeight, Gravity.CENTER));
+                        }
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(SharkFinderActivity.this, "Unable to search for " + finalSearchText + " on Grooveshark", Toast.LENGTH_LONG).show();
-                    error.fillInStackTrace();
+                    tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, finalSearchText));
+                    pbSearching.setVisibility(View.GONE);
+                    failureTimeout.start();
                 }
             });
         } else {

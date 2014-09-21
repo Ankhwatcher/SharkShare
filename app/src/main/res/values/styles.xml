@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Dialog.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/dialog_background</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
 
         <item name="android:textAppearanceLarge">@style/AppTheme.TextAppearance.Large</item>
@@ -17,21 +17,24 @@
 
     <style name="AppTheme.TextAppearance" parent="android:TextAppearance.Holo">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="AppTheme.TextAppearance.Large">
         <item name="android:textSize">14sp</item>
-
     </style>
 
     <style name="AppTheme.TextAppearance.Medium">
         <item name="android:textSize">18sp</item>
-
     </style>
 
     <style name="AppTheme.TextAppearance.Small">
         <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.SearchText">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>
