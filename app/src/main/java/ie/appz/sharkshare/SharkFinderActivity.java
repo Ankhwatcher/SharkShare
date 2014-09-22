@@ -76,8 +76,6 @@ public class SharkFinderActivity extends Activity {
         }
     });
 
-    @InjectView(R.id.flDialog)
-    protected FrameLayout flDialog;
 
     @InjectView(R.id.gvSongs)
     protected GridView gvSongs;
@@ -90,7 +88,37 @@ public class SharkFinderActivity extends Activity {
 
     @InjectView(R.id.pbSearching)
     protected ProgressBar pbSearching;
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            tvSearching.setText(R.string.cant_search_on_grooveshark);
+            pbSearching.setVisibility(View.GONE);
+            failureTimeout.start();
+        }
+    };
     private SongAdapter songAdapter = new SongAdapter();
+    private String searchText;
+    Response.Listener<ArrayList<SongDetail>> searchResponseListener = new Response.Listener<ArrayList<SongDetail>>() {
+        @Override
+        public void onResponse(final ArrayList<SongDetail> response) {
+            if (response.size() == 0) {
+                tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, searchText));
+                pbSearching.setVisibility(View.GONE);
+                failureTimeout.start();
+            } else {
+                llSearching.setVisibility(View.GONE);
+                gvSongs.setVisibility(View.VISIBLE);
+                songAdapter.setList(response);
+                songAdapter.notifyDataSetChanged();
+
+                if (response.size() == 1) {
+                    int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
+                    int cellHeight = getResources().getDimensionPixelSize(R.dimen.cell_height);
+                    gvSongs.setLayoutParams(new FrameLayout.LayoutParams(cellWidth, cellHeight, Gravity.CENTER));
+                }
+            }
+        }
+    };
 
     @OnClick(R.id.flDialog)
     void dialogClick() {
@@ -118,8 +146,8 @@ public class SharkFinderActivity extends Activity {
         gvSongs.setAdapter(songAdapter);
 
 
-        if (getIntent().hasExtra(getIntent().EXTRA_SUBJECT)) {
-            String searchText = getIntent().getStringExtra(getIntent().EXTRA_SUBJECT);
+        if (getIntent().hasExtra(Intent.EXTRA_SUBJECT)) {
+            searchText = getIntent().getStringExtra(Intent.EXTRA_SUBJECT);
 
             //Remove the "Check out " message from the start of Google Music links
             if (searchText.startsWith("Check out ")) {
@@ -132,36 +160,7 @@ public class SharkFinderActivity extends Activity {
 
             tvSearching.setText(getString(R.string.searching_for_x, searchText));
 
-
-            final String finalSearchText = searchText;
-            TinySharkApi.getInstance(this).performSearch(this, searchText, new Response.Listener<ArrayList<SongDetail>>() {
-                @Override
-                public void onResponse(final ArrayList<SongDetail> response) {
-                    if (response.size() == 0) {
-                        tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, finalSearchText));
-                        pbSearching.setVisibility(View.GONE);
-                        failureTimeout.start();
-                    } else {
-                        llSearching.setVisibility(View.GONE);
-                        gvSongs.setVisibility(View.VISIBLE);
-                        songAdapter.setList(response);
-                        songAdapter.notifyDataSetChanged();
-
-                        if (response.size() == 1) {
-                            int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
-                            int cellHeight = getResources().getDimensionPixelSize(R.dimen.cell_height);
-                            gvSongs.setLayoutParams(new FrameLayout.LayoutParams(cellWidth, cellHeight, Gravity.CENTER));
-                        }
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, finalSearchText));
-                    pbSearching.setVisibility(View.GONE);
-                    failureTimeout.start();
-                }
-            });
+            TinySharkApi.getInstance(this).performSearch(this, searchText, searchResponseListener, errorListener);
         } else {
             finish();
         }

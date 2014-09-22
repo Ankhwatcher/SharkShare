@@ -11,9 +11,11 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import ie.appz.sharkshare.models.SongDetail;
@@ -51,7 +53,7 @@ public final class TinySharkApi {
         return instance;
     }
 
-    public static RequestQueue requestQueueSingleton(Context context) {
+    private static RequestQueue requestQueueSingleton(Context context) {
 
         if (sRequestQueue == null) {
             synchronized (syncObj) {
@@ -81,11 +83,13 @@ public final class TinySharkApi {
 
     public void performSearch(Context context, String searchText, int limit, String apiKey, Response.Listener<ArrayList<SongDetail>> responseListener, Response.ErrorListener errorListener) {
 
-        String concatSearch = String.format(LIMITED_DETAILED_SEARCH, searchText, limit, apiKey);
         URL url;
         try {
+            String concatSearch = String.format(LIMITED_DETAILED_SEARCH, URLEncoder.encode(searchText, "UTF-8"), limit, apiKey);
             url = new URL(baseUrl, concatSearch);
         } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
