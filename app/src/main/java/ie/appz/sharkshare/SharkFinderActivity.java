@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -76,6 +78,8 @@ public class SharkFinderActivity extends Activity {
         }
     });
 
+    @InjectView(R.id.flDialog)
+    protected FrameLayout flDialog;
 
     @InjectView(R.id.gvSongs)
     protected GridView gvSongs;
@@ -119,6 +123,7 @@ public class SharkFinderActivity extends Activity {
             }
         }
     };
+    private View selectedView;
 
     @OnClick(R.id.flDialog)
     void dialogClick() {
@@ -126,14 +131,101 @@ public class SharkFinderActivity extends Activity {
     }
 
     @OnItemClick(R.id.gvSongs)
-    void songClicked(int position) {
-        SongDetail songDetail = songAdapter.getItem(position);
-        Intent intent = new Intent(this, SharkFinderService.class);
-        intent.putExtra(Constants.SONG_URL, songDetail.getUrl());
-        intent.putExtra(Constants.SONG_ID, songDetail.getSongId());
+    void songClicked(View clickedView, int position) {
+        final SongDetail songDetail = songAdapter.getItem(position);
+        selectedView = songAdapter.getView(position, null, flDialog);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(clickedView.getWidth(), clickedView.getHeight());
+        layoutParams.setMargins(clickedView.getLeft() + gvSongs.getLeft(), clickedView.getTop() + gvSongs.getTop(), 0, 0);
+        Log.d(Constants.LOGTAG, "clicked getLeft(): " + clickedView.getLeft() + " getTop(): " + clickedView.getTop());
+        flDialog.addView(selectedView, layoutParams);
+        gvSongs.setOnItemClickListener(null);
+        gvSongs.animate().alpha(0f)
+                .setDuration(250)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-        startService(intent);
-        finish();
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        gvSongs.setVisibility(View.GONE);
+                        ImageView ivAlbum = (ImageView) selectedView.findViewById(R.id.ivAlbum);
+
+
+                        ImageView imageView = new ImageView(SharkFinderActivity.this);
+                        imageView.setImageResource(R.drawable.album_circle);
+                        imageView.setColorFilter(ivAlbum.getColorFilter());
+
+                        FrameLayout.LayoutParams imageLayoutParams = new FrameLayout.LayoutParams(ivAlbum.getWidth(), ivAlbum.getHeight());
+                        imageLayoutParams.setMargins(ivAlbum.getLeft() + selectedView.getLeft(), ivAlbum.getTop() + selectedView.getTop(), 0, 0);
+
+                        flDialog.addView(imageView, imageLayoutParams);
+                        selectedView.setBackgroundResource(android.R.color.transparent);
+                        selectedView.bringToFront();
+
+                        //Expand the circle out of the bounds of the screen in all directions, hopefully
+                        imageView.animate().scaleX(20).scaleY(20).setDuration(500);
+                        //Fade out the song info at the same time
+                        selectedView.animate().alpha(0f).setDuration(500).setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                Intent intent = new Intent(SharkFinderActivity.this, SharkFinderService.class);
+                                intent.putExtra(Constants.SONG_URL, songDetail.getUrl());
+                                intent.putExtra(Constants.SONG_ID, songDetail.getSongId());
+                                startService(intent);
+
+                                //Give the Service a quarter of a second to set up the Window then animate the activity out.
+                                flDialog.animate().alpha(0f).setDuration(500).setStartDelay(250).setListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
     }
 
     @Override

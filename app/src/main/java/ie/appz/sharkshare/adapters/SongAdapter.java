@@ -69,6 +69,7 @@ public class SongAdapter extends BaseAdapter {
 
     public void setList(ArrayList<SongDetail> list) {
         this.list = list;
+        notifyDataSetChanged();
     }
 
 

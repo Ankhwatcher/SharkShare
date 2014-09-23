@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,10 @@ import ie.appz.sharkshare.R;
 import ie.appz.sharkshare.utils.ColorUtils;
 
 public class SharkFinderService extends Service {
+
+
+    @InjectView(R.id.llFloatingWrapper)
+    protected LinearLayout llFloatingWrapper;
 
     @InjectView(R.id.ivShare)
     protected ImageView ivShare;
@@ -98,15 +103,20 @@ public class SharkFinderService extends Service {
         color = ColorUtils.generateRandomColour(songId);
 
 
+        llFloatingWrapper.setAlpha(0f);
+
         Drawable circularBackground = getResources().getDrawable(R.drawable.floating_circle_background);
         circularBackground.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         ivShare.setBackground(circularBackground);
+
         ivCopy.setBackground(circularBackground);
+
 
         Drawable rectangularDrawable = getResources().getDrawable(R.drawable.floating_text_background);
         rectangularDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         tvLink.setBackground(rectangularDrawable);
         tvLink.setText(songUrl);
+
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -116,6 +126,9 @@ public class SharkFinderService extends Service {
                 PixelFormat.TRANSLUCENT);
 
         windowManager.addView(floatingView, params);
+
+
+        llFloatingWrapper.animate().alpha(1f).setDuration(500);
 
 
         return START_NOT_STICKY;
