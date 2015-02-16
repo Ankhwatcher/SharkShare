@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,6 +27,8 @@ import butterknife.OnItemClick;
 import ie.appz.sharkshare.adapters.SongAdapter;
 import ie.appz.sharkshare.models.SongDetail;
 import ie.appz.sharkshare.service.SharkFinderService;
+import ie.appz.sharkshare.utils.ColorUtils;
+import ie.appz.sharkshare.utils.Utils;
 
 
 public class SharkFinderActivity extends Activity {
@@ -124,6 +125,7 @@ public class SharkFinderActivity extends Activity {
         }
     };
     private View selectedView;
+    private boolean isDestroyed = false;
 
     @OnClick(R.id.flDialog)
     void dialogClick() {
@@ -136,7 +138,6 @@ public class SharkFinderActivity extends Activity {
         selectedView = songAdapter.getView(position, null, flDialog);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(clickedView.getWidth(), clickedView.getHeight());
         layoutParams.setMargins(clickedView.getLeft() + gvSongs.getLeft(), clickedView.getTop() + gvSongs.getTop(), 0, 0);
-        Log.d(Constants.LOGTAG, "clicked getLeft(): " + clickedView.getLeft() + " getTop(): " + clickedView.getTop());
         flDialog.addView(selectedView, layoutParams);
         gvSongs.setOnItemClickListener(null);
         gvSongs.animate().alpha(0f)
@@ -154,7 +155,7 @@ public class SharkFinderActivity extends Activity {
 
                         ImageView imageView = new ImageView(SharkFinderActivity.this);
                         imageView.setImageResource(R.drawable.album_circle);
-                        imageView.setColorFilter(ivAlbum.getColorFilter());
+                        imageView.setColorFilter(ColorUtils.generateRandomColour(songDetail.getSongId()));
 
                         FrameLayout.LayoutParams imageLayoutParams = new FrameLayout.LayoutParams(ivAlbum.getWidth(), ivAlbum.getHeight());
                         imageLayoutParams.setMargins(ivAlbum.getLeft() + selectedView.getLeft(), ivAlbum.getTop() + selectedView.getTop(), 0, 0);
@@ -242,12 +243,21 @@ public class SharkFinderActivity extends Activity {
             searchText = getIntent().getStringExtra(Intent.EXTRA_SUBJECT);
 
             //Remove the "Check out " message from the start of Google Music links
-            if (searchText.startsWith("Check out ")) {
-                searchText = searchText.replace("Check out ", "");
+            if (searchText.startsWith(getString(R.string.match_prefix))) {
+                searchText = searchText.replace(getString(R.string.match_prefix), "");
             }
+
+            //Replace language specific terms for songs with the word by
+            searchText = searchText.replace(getString(R.string.match_by), getString(R.string.search_by));
+
+            //Strip out the double quotes
+            searchText = searchText.replace("\"", "").replace("“", "");
+
             Drawable searchingBackground = getResources().getDrawable(R.drawable.toast_background);
             searchingBackground.setColorFilter(getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_ATOP);
-            llSearching.setBackground(searchingBackground);
+
+            Utils.setBackgroundDrawable(llSearching, searchingBackground);
+
             llSearching.setVisibility(View.VISIBLE);
 
             tvSearching.setText(getString(R.string.searching_for_x, searchText));
@@ -256,5 +266,16 @@ public class SharkFinderActivity extends Activity {
         } else {
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isDestroyed = true;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 }

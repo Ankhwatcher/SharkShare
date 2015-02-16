@@ -5,6 +5,7 @@ import android.graphics.Color;
 import java.util.Random;
 
 /**
+ * Utilities relating to color.
  * Created by rory on 21/09/14.
  */
 public class ColorUtils {

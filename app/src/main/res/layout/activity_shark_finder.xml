@@ -1,6 +1,7 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
     android:id="@+id/flDialog"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,6 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/inner_margin"
+        android:layout_marginRight="@dimen/inner_margin"
         android:animateLayoutChanges="true"
         android:background="@drawable/toast_background"
         android:gravity="center_horizontal"
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textAppearance="@style/AppTheme.TextAppearance.SearchText"
-            tools:text="Searching for\n Do You Want To by Franz Ferdinand" />
+            tools:text="Searching for\n Do You Want To by Franz Ferdinand"/>
 
         <ProgressBar
             android:id="@+id/pbSearching"
@@ -30,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/apptheme_dark_progress_indeterminate_horizontal_holo_dark" />
+            android:indeterminateDrawable="@drawable/apptheme_dark_progress_indeterminate_horizontal_holo_dark"/>
     </LinearLayout>
 
     <GridView
@@ -38,10 +41,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-
+        android:layout_margin="@dimen/inner_margin"
         android:clipToPadding="false"
-        android:columnWidth="160dp"
+        android:columnWidth="@dimen/cell_width"
         android:gravity="center"
         android:horizontalSpacing="4dp"
         android:numColumns="auto_fit"
@@ -49,6 +51,6 @@
         android:verticalSpacing="4dp"
         android:visibility="gone"
         tools:context=".SharkFinderActivity"
-        tools:listitem="@layout/cell_song_detail" />
+        tools:listitem="@layout/cell_song_detail"/>
 </FrameLayout>
 

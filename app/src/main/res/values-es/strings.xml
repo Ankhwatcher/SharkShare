@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="match_prefix">"Echa un vistazo a "</string>
+    <string name="match_by">"de "</string>
+
+    <string name="searching_for_x">Buscando %s</string>
+    <string name="cant_find_x_on_grooveshark">No puedo encontrar %s en Grooveshark :(</string>
+    <string name="cant_search_on_grooveshark">No puedo conectar a Grooveshark ahora :(</string>
+    <string name="x_copied_to_clipboard">He copiado %s a tu portapapeles</string>
+    <string name="share_via">Compartir vía</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- These strings have to match the text added by Google Play Music -->
+    <string name="match_prefix">"Découvrez le titre "</string>
+    <string name="match_by">"de l\'artiste "</string>
+
+    <string name="searching_for_x">Recherche de %s</string>
+    <string name="cant_find_x_on_grooveshark">Je ne trouve pas %s dans Grooveshark :(</string>
+    <string name="cant_find_x_on_grooveshark_searching_for_y">Je ne trouve pas %1$s dans Grooveshark\nRecherche %2$s à la place</string>
+    <string name="cant_search_on_grooveshark">Je ne peux pas me connecter à Grooveshark :(</string>
+    <string name="x_copied_to_clipboard">J\'ai copié %s dans votre presse-papier</string>
+    <string name="share_via">Partager sur</string>
+</resources>

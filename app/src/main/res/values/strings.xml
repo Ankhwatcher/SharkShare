@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Shark Share</string>
-    <string name="api_endpoint">http://tinysong.com/</string>
+    <string name="app_name" translatable="false">Shark Share</string>
+    <string name="api_endpoint" translatable="false">http://tinysong.com/</string>
+    <string name="search_by" translatable="false">"by "</string>
+
+    <string name="match_prefix">"Check out "</string>
+    <string name="match_by">"by "</string>
+
+
     <string name="searching_for_x">Searching for %s</string>
     <string name="cant_find_x_on_grooveshark">I can\'t find %s on Grooveshark :(</string>
     <string name="cant_find_x_on_grooveshark_searching_for_y">I can\'t find %1$s on Grooveshark\nSearching for %2$s instead</string>
     <string name="cant_search_on_grooveshark">I can\'t connect to Grooveshark right now :(</string>
     <string name="x_copied_to_clipboard">I\'ve copied %s to your clipboard!</string>
     <string name="share_via">Share via</string>
+
 
 </resources>

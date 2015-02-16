@@ -16,6 +16,7 @@ import ie.appz.sharkshare.models.SongDetail;
 import ie.appz.sharkshare.utils.ColorUtils;
 
 /**
+ * And adapter to display the list of SongDetail.
  * Created by rory on 18/09/14.
  */
 public class SongAdapter extends BaseAdapter {
@@ -38,8 +39,6 @@ public class SongAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-
         SongDetail songDetail = getItem(position);
         SongDetailHolder holder;
 
@@ -61,10 +60,6 @@ public class SongAdapter extends BaseAdapter {
         holder.ivAlbum.setColorFilter(ColorUtils.generateRandomColour(songDetail.getSongId()));
 
         return convertView;
-    }
-
-    public ArrayList<SongDetail> getList() {
-        return list;
     }
 
     public void setList(ArrayList<SongDetail> list) {

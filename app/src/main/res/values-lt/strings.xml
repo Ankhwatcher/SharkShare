@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="match_prefix">"Peržiūrėkite atlikėjo "</string>
+    <string name="match_by">"takelį „"</string>
+
+    <string name="searching_for_x">Ieškome %s</string>
+    <string name="cant_find_x_on_grooveshark">Nerandame %s Grooveshark :(</string>
+    <string name="cant_find_x_on_grooveshark_searching_for_y">Nerandame %1$s Grooveshark, ieškome %2$s</string>
+    <string name="cant_search_on_grooveshark">Šiuo metu negalime prisijungti prie Grooveshark :(</string>
+    <string name="x_copied_to_clipboard">Išsaugojome %s!</string>
+    <string name="share_via">Dalintis</string>
+</resources>

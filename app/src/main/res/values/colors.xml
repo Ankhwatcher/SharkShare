@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="theme_color">#d40000</color>
+    <color name="shadow_start_grey">#77000000</color>
+    <color name="shadow_end_grey">#44000000</color>
 </resources>

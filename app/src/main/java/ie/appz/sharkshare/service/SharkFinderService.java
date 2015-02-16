@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,9 +21,11 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import ie.appz.sharkshare.Constants;
 import ie.appz.sharkshare.R;
 import ie.appz.sharkshare.utils.ColorUtils;
+import ie.appz.sharkshare.utils.Utils;
 
 public class SharkFinderService extends Service {
 
@@ -107,14 +110,14 @@ public class SharkFinderService extends Service {
 
         Drawable circularBackground = getResources().getDrawable(R.drawable.floating_circle_background);
         circularBackground.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        ivShare.setBackground(circularBackground);
 
-        ivCopy.setBackground(circularBackground);
+        Utils.setBackgroundDrawable(ivShare, circularBackground);
+        Utils.setBackgroundDrawable(ivCopy, circularBackground);
 
 
         Drawable rectangularDrawable = getResources().getDrawable(R.drawable.floating_text_background);
         rectangularDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        tvLink.setBackground(rectangularDrawable);
+        Utils.setBackgroundDrawable(tvLink, rectangularDrawable);
         tvLink.setText(songUrl);
 
 
@@ -134,6 +137,44 @@ public class SharkFinderService extends Service {
         return START_NOT_STICKY;
     }
 
+    @OnTouch({R.id.ivShare, R.id.ivCopy, R.id.tvLink})
+    public boolean buttonTouched(View v, MotionEvent motionEvent) {
+        Drawable backgroundDrawable;
+        if (v instanceof ImageView) {
+            ImageView imageView = (ImageView) v;
+            backgroundDrawable = getResources().getDrawable(R.drawable.floating_circle_background);
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    backgroundDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    imageView.setColorFilter(getResources().getColor(android.R.color.white));
+                    break;
+                }
+            }
+            Utils.setBackgroundDrawable(imageView, backgroundDrawable);
+        } else if (v instanceof TextView) {
+            TextView textView = (TextView) v;
+            backgroundDrawable = getResources().getDrawable(R.drawable.floating_text_background);
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    textView.setTextColor(color);
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    backgroundDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    textView.setTextColor(getResources().getColor(android.R.color.white));
+                    break;
+                }
+            }
+            Utils.setBackgroundDrawable(textView, backgroundDrawable);
+        }
+
+        return false;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -147,7 +188,6 @@ public class SharkFinderService extends Service {
         TextView textView = (TextView) LayoutInflater.from(this).inflate(R.layout.toast, null);
         textView.setText(message);
         textView.setTextColor(color);
-
         toast.setView(textView);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
