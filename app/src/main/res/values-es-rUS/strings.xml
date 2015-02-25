@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="match_prefix">"Echa un vistazo a "</string>
+    <string name="match_mid">"de "</string>
+
+</resources>

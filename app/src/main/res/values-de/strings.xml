@@ -2,6 +2,14 @@
 <resources>
 
     <string name="match_prefix">"Hör dir "</string>
-    <string name="match_by">"von "</string>
+    <string name="match_mid">"von "</string>
+    <string name="match_post">" an"</string>
 
+
+    <string name="searching_for_x">Suche %s</string>
+    <string name="cant_find_x_on_grooveshark">Ich kann %s nicht auf Grooveshark finden :(</string>
+    <string name="cant_find_x_on_grooveshark_searching_for_y">Ich kann %1$s nicht auf Grooveshark finden\nSuche auf %2$s</string>
+    <string name="cant_search_on_grooveshark">Ich kann im Moment keine Verbindung mit Grooveshark herstellen :(</string>
+    <string name="x_copied_to_clipboard">Ich habe %s in die Zwischenablage kopiert!</string>
+    <string name="share_via">Teilen über</string>
 </resources>

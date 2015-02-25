@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="match_prefix">"Confira "</string>
+    <string name="match_mid">"de "</string>
+
+    <string name="share_via">Compartilhar via</string>
+</resources>

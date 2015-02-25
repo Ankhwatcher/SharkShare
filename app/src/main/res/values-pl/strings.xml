@@ -2,7 +2,7 @@
 <resources>
 
     <string name="match_prefix">"Posłuchaj utworu "</string>
-    <string name="match_by">"wykonawcy "</string>
+    <string name="match_mid">"wykonawcy "</string>
 
     <string name="searching_for_x">Szukam %s</string>
     <string name="cant_find_x_on_grooveshark">Nie znaleziono %s na Grooveshark ;(</string>

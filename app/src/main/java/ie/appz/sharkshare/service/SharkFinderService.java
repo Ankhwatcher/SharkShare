@@ -18,12 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import ie.appz.sharkshare.Constants;
 import ie.appz.sharkshare.R;
+import ie.appz.sharkshare.SharkShareApplication;
 import ie.appz.sharkshare.utils.ColorUtils;
 import ie.appz.sharkshare.utils.Utils;
 
@@ -46,6 +50,7 @@ public class SharkFinderService extends Service {
     private View floatingView;
     private String songUrl;
     private int color;
+    private Tracker mTracker;
 
     public SharkFinderService() {
     }
@@ -59,11 +64,19 @@ public class SharkFinderService extends Service {
 
     @OnClick({R.id.rlFloatingBackground, R.id.llFloatingWrapper})
     void dismissClicked() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("UX")
+                .setAction("DismissClicked")
+                .build());
         stopSelf();
     }
 
     @OnClick(R.id.ivCopy)
     void copyCLicked() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("UX")
+                .setAction("CopyClicked")
+                .build());
         ClipData clipData = ClipData.newPlainText("tinysong link", songUrl);
         ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(clipData);
         showCustomToast(getString(R.string.x_copied_to_clipboard, songUrl));
@@ -72,6 +85,10 @@ public class SharkFinderService extends Service {
 
     @OnClick(R.id.ivShare)
     void shareClicked() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("UX")
+                .setAction("ShareClicked")
+                .build());
         Intent sendIntent = Intent.createChooser(new Intent()
                         .setAction(Intent.ACTION_SEND)
                         .putExtra(Intent.EXTRA_TEXT, songUrl)
@@ -84,6 +101,10 @@ public class SharkFinderService extends Service {
 
     @OnClick(R.id.tvLink)
     void textClicked() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("UX")
+                .setAction("TextClicked")
+                .build());
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(songUrl)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(browserIntent);
         stopSelf();
@@ -95,7 +116,9 @@ public class SharkFinderService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
+        mTracker = ((SharkShareApplication) getApplication()).getTracker();
+        mTracker.setScreenName(getString(R.string.analytics_name_displaying));
+        mTracker.send(new HitBuilders.AppViewBuilder().build());
 
         floatingView = LayoutInflater.from(this).inflate(R.layout.floating_buttons, null);
 

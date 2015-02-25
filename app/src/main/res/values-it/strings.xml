@@ -2,6 +2,12 @@
 <resources>
 
     <string name="match_prefix">"Ascolta "</string>
-    <string name="match_by">"di "</string>
+    <string name="match_mid">"di "</string>
 
+    <string name="searching_for_x">Ricerca di %s in corso</string>
+    <string name="cant_find_x_on_grooveshark">Non ho trovato %s su Grooveshark</string>
+    <string name="cant_find_x_on_grooveshark_searching_for_y">Non ho trovato %1$s su Grooveshark\nRicerca di %2$s invece</string>
+    <string name="cant_search_on_grooveshark">Non riesco a connettermi a Grooveshark in questo momento :(</string>
+    <string name="x_copied_to_clipboard">%s copiato negli appunti</string>
+    <string name="share_via">Condividi via</string>
 </resources>

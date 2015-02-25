@@ -3,6 +3,8 @@
 /.idea
 .DS_Store
 /build
-ApiKeys.java
-*.iml
 /src/androidTest
+ApiKeys.java
+
+*.iml
+*.jks

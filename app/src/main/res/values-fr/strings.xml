@@ -2,7 +2,8 @@
 <resources>
     <!-- These strings have to match the text added by Google Play Music -->
     <string name="match_prefix">"Découvrez le titre "</string>
-    <string name="match_by">"de l\'artiste "</string>
+    <string name="match_mid">"de l\'artiste "</string>
+    <string name="match_post">"\""</string>
 
     <string name="searching_for_x">Recherche de %s</string>
     <string name="cant_find_x_on_grooveshark">Je ne trouve pas %s dans Grooveshark :(</string>

@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
@@ -96,6 +98,9 @@ public class SharkFinderActivity extends Activity {
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
+            mTracker.send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("RequestFailed")
+                    .build());
             tvSearching.setText(R.string.cant_search_on_grooveshark);
             pbSearching.setVisibility(View.GONE);
             failureTimeout.start();
@@ -107,10 +112,20 @@ public class SharkFinderActivity extends Activity {
         @Override
         public void onResponse(final ArrayList<SongDetail> response) {
             if (response.size() == 0) {
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("API")
+                        .setAction("SongNotFound")
+                        .build());
                 tvSearching.setText(getString(R.string.cant_find_x_on_grooveshark, searchText));
                 pbSearching.setVisibility(View.GONE);
                 failureTimeout.start();
             } else {
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("API")
+                        .setAction("SongFound")
+                        .setValue(response.size())
+                        .build());
+
                 llSearching.setVisibility(View.GONE);
                 gvSongs.setVisibility(View.VISIBLE);
                 songAdapter.setList(response);
@@ -126,6 +141,7 @@ public class SharkFinderActivity extends Activity {
     };
     private View selectedView;
     private boolean isDestroyed = false;
+    private Tracker mTracker;
 
     @OnClick(R.id.flDialog)
     void dialogClick() {
@@ -134,6 +150,10 @@ public class SharkFinderActivity extends Activity {
 
     @OnItemClick(R.id.gvSongs)
     void songClicked(View clickedView, int position) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("UX")
+                .setAction("SongSelected")
+                .build());
         final SongDetail songDetail = songAdapter.getItem(position);
         selectedView = songAdapter.getView(position, null, flDialog);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(clickedView.getWidth(), clickedView.getHeight());
@@ -237,6 +257,9 @@ public class SharkFinderActivity extends Activity {
         ButterKnife.inject(this);
 
         gvSongs.setAdapter(songAdapter);
+        mTracker = ((SharkShareApplication) getApplication()).getTracker();
+        mTracker.setScreenName(getString(R.string.analytics_name_search));
+        mTracker.send(new HitBuilders.AppViewBuilder().build());
 
 
         if (getIntent().hasExtra(Intent.EXTRA_SUBJECT)) {
@@ -248,10 +271,16 @@ public class SharkFinderActivity extends Activity {
             }
 
             //Replace language specific terms for songs with the word by
-            searchText = searchText.replace(getString(R.string.match_by), getString(R.string.search_by));
+            searchText = searchText.replace(getString(R.string.match_mid), getString(R.string.search_by));
+
+            //Remove language specific trailing characters
+            String matchPost = getString(R.string.match_post);
+            if (matchPost.length() > 0 && searchText.endsWith(matchPost)) {
+                searchText = searchText.substring(0, searchText.length() - matchPost.length());
+            }
 
             //Strip out the double quotes
-            searchText = searchText.replace("\"", "").replace("“", "");
+            searchText = searchText.replace("\"", "");
 
             Drawable searchingBackground = getResources().getDrawable(R.drawable.toast_background);
             searchingBackground.setColorFilter(getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_ATOP);
@@ -264,7 +293,18 @@ public class SharkFinderActivity extends Activity {
 
             TinySharkApi.getInstance(this).performSearch(this, searchText, searchResponseListener, errorListener);
         } else {
-            finish();
+            mTracker.send(new HitBuilders.ExceptionBuilder()
+                    .setDescription("NoSubjectInfo")
+                    .build());
+            Drawable searchingBackground = getResources().getDrawable(R.drawable.toast_background);
+            searchingBackground.setColorFilter(getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_ATOP);
+
+            Utils.setBackgroundDrawable(llSearching, searchingBackground);
+
+            llSearching.setVisibility(View.VISIBLE);
+            tvSearching.setText(getString(R.string.no_song_info));
+            pbSearching.setVisibility(View.GONE);
+            failureTimeout.start();
         }
     }
 
