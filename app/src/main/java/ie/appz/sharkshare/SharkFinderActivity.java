@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -107,7 +108,7 @@ public class SharkFinderActivity extends Activity {
         }
     };
     private SongAdapter songAdapter = new SongAdapter();
-    private String searchText;
+    private String searchText = null;
     Response.Listener<ArrayList<SongDetail>> searchResponseListener = new Response.Listener<ArrayList<SongDetail>>() {
         @Override
         public void onResponse(final ArrayList<SongDetail> response) {
@@ -281,7 +282,15 @@ public class SharkFinderActivity extends Activity {
 
             //Strip out the double quotes
             searchText = searchText.replace("\"", "");
+        } else if (getIntent().getData() != null) {
+            try {
+                MailTo mailTo = MailTo.parse(getIntent().getData().toString());
+                searchText = mailTo.getSubject();
+            } catch (android.net.ParseException ignored) {
+            }
+        }
 
+        if (searchText != null) {
             Drawable searchingBackground = getResources().getDrawable(R.drawable.toast_background);
             searchingBackground.setColorFilter(getResources().getColor(R.color.theme_color), PorterDuff.Mode.SRC_ATOP);
 
