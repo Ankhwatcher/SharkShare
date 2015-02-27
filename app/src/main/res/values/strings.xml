@@ -18,8 +18,8 @@
     <string name="cant_find_x_on_grooveshark_searching_for_y">I can\'t find %1$s on Grooveshark\nSearching for %2$s instead</string>
     <string name="cant_search_on_grooveshark">I can\'t connect to Grooveshark right now :(</string>
     <string name="x_copied_to_clipboard">I\'ve copied %s to your clipboard!</string>
-    <string name="share_via">Share via</string>
     <string name="no_song_info">No song info to search for!</string>
+    <string name="share_via">Share via</string>
 
 
 </resources>

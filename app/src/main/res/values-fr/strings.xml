@@ -10,5 +10,6 @@
     <string name="cant_find_x_on_grooveshark_searching_for_y">Je ne trouve pas %1$s dans Grooveshark\nRecherche %2$s à la place</string>
     <string name="cant_search_on_grooveshark">Je ne peux pas me connecter à Grooveshark :(</string>
     <string name="x_copied_to_clipboard">J\'ai copié %s dans votre presse-papier</string>
+    <string name="no_song_info">Aucune info sur la chnason à rechercher !</string>
     <string name="share_via">Partager sur</string>
 </resources>

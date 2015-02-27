@@ -5,4 +5,12 @@
     <string name="match_mid">"de "</string>
 
     <string name="share_via">Partilhar através de</string>
+
+
+    <string name="searching_for_x">Procurando por %s</string>
+    <string name="cant_find_x_on_grooveshark">Não consigo achar %s no Grooveshark :(</string>
+    <string name="cant_find_x_on_grooveshark_searching_for_y">Não consigo achar %1$s no Grooveshark\nProcurando por %2$s ao invés</string>
+    <string name="cant_search_on_grooveshark">Não consigo me conectar ao Grooveshark agora :(</string>
+    <string name="x_copied_to_clipboard">Copiado %s para a área de trabalho</string>
+    <string name="no_song_info">Nenhuma informação de música para procurar!</string>
 </resources>
